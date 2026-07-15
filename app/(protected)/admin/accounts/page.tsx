@@ -207,7 +207,7 @@ export default function AdminAccountsPage() {
   ];
 
   return (
-    <Space orientation="vertical" size={16} style={{ width: "100%" }}>
+    <Space direction="vertical" size={16} style={{ width: "100%" }}>
       <Card>
         <Space style={{ width: "100%", justifyContent: "space-between" }}>
           <div>

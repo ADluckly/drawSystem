@@ -2,6 +2,8 @@
 
 import { Card, Col, Row, Statistic, Typography } from "antd";
 
+import { LessonWarningCard } from "@/components/business/lesson-warning-card";
+
 export default function DashboardPage() {
   return (
     <div>
@@ -28,6 +30,9 @@ export default function DashboardPage() {
           </Card>
         </Col>
       </Row>
+      <div style={{ marginTop: 16 }}>
+        <LessonWarningCard />
+      </div>
     </div>
   );
 }

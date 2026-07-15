@@ -2,7 +2,7 @@
 
 Drawing Training Check-in System.
 
-Phase 0 + Phase 1 baseline based on Next.js 15 App Router + TypeScript.
+Phase 0 + Phase 1 + Phase 2 MVP baseline based on Next.js 15 App Router + TypeScript.
 
 ## Tech Stack
 
@@ -40,14 +40,14 @@ cp .env.example .env.local
 npm run dev
 ```
 
-Visit http://localhost:3000
+Visit http://localhost:4000
 
 ## Bootstrap Super Account
 
 Before using account management, initialize a first `super` account once:
 
 ```bash
-curl -X POST http://localhost:3000/api/admin/bootstrap-super \
+curl -X POST http://localhost:4000/api/admin/bootstrap-super \
 	-H "Content-Type: application/json" \
 	-d '{
 		"bootstrapKey": "your-BOOTSTRAP_SUPER_KEY",
@@ -65,6 +65,8 @@ After bootstrapping, login at `/login` and manage child accounts in `/admin/acco
 - `npm run typecheck`: run TypeScript type checking
 - `npm run build`: build production bundle
 - `npm run start`: run production server
+- `npm test`: run unit and integration tests
+- `npm run test:coverage`: run test coverage report
 
 ## Phase 0 Baseline
 
@@ -82,3 +84,13 @@ After bootstrapping, login at `/login` and manage child accounts in `/admin/acco
 - Role-based menu visibility and protected page layouts
 - Super-only account management APIs and UI
 - Permission matrix: `doc/permission-matrix-phase1.md`
+
+## Phase 2 Core MVP
+
+- Models: `Student`, `Recharge`, `Sign`, `Course`, `Class`
+- Student management with filter and detail aggregation (recharge/sign history)
+- Recharge workflow with serial number, idempotency key, and atomic lesson update
+- Single student sign workflow with leave support (leave does not decrement lessons)
+- Same-day duplicate sign protection by business check + unique index
+- Lesson warning API and dashboard warning card
+- Key coverage: lesson ledger unit tests + recharge/sign integration tests

@@ -1,13 +1,16 @@
 import type { AuthRole } from "@/lib/auth/types";
 
 export const ROLE_ACCESS_MATRIX = {
-  super: ["/dashboard", "/admin/accounts"],
-  admin: ["/dashboard"],
-  teacher: ["/dashboard"],
+  super: ["/dashboard", "/students", "/recharges", "/signs", "/admin/accounts"],
+  admin: ["/dashboard", "/students", "/recharges", "/signs"],
+  teacher: ["/dashboard", "/students", "/signs"],
 } as const;
 
 export const ROUTE_ROLE_RULES: Array<{ prefix: string; allow: AuthRole[] }> = [
   { prefix: "/dashboard", allow: ["super", "admin", "teacher"] },
+  { prefix: "/students", allow: ["super", "admin", "teacher"] },
+  { prefix: "/recharges", allow: ["super", "admin"] },
+  { prefix: "/signs", allow: ["super", "admin", "teacher"] },
   { prefix: "/admin", allow: ["super"] },
 ];
 
@@ -23,6 +26,24 @@ export const AUTH_MENU_ITEMS: MenuItemConfig[] = [
     key: "dashboard",
     label: "仪表盘",
     path: "/dashboard",
+    allow: ["super", "admin", "teacher"],
+  },
+  {
+    key: "students",
+    label: "学员管理",
+    path: "/students",
+    allow: ["super", "admin", "teacher"],
+  },
+  {
+    key: "recharges",
+    label: "充值管理",
+    path: "/recharges",
+    allow: ["super", "admin"],
+  },
+  {
+    key: "signs",
+    label: "打卡记录",
+    path: "/signs",
     allow: ["super", "admin", "teacher"],
   },
   {
