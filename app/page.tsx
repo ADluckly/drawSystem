@@ -11,7 +11,7 @@ export default function Home() {
         </Typography.Title>
       </header>
       <main className="page-content">
-        <Space direction="vertical" size={24} style={{ width: "100%" }}>
+        <Space orientation="vertical" size={24} style={{ width: "100%" }}>
           <Typography.Title level={2} style={{ margin: 0 }}>
             Phase 0 基座已就绪
           </Typography.Title>
@@ -20,17 +20,17 @@ export default function Home() {
           </Typography.Paragraph>
           <Row gutter={[16, 16]}>
             <Col xs={24} md={8}>
-              <Card title="App Router" bordered={false}>
+              <Card title="App Router" variant="borderless">
                 基于 Next.js 15 App Router，支持后续 API Route 与页面模块化扩展。
               </Card>
             </Col>
             <Col xs={24} md={8}>
-              <Card title="Env Guard" bordered={false}>
+              <Card title="Env Guard" variant="borderless">
                 启动时自动校验关键配置，缺失 Mongo 或 JWT 配置会直接抛错阻断。
               </Card>
             </Col>
             <Col xs={24} md={8}>
-              <Card title="Mongo Reuse" bordered={false}>
+              <Card title="Mongo Reuse" variant="borderless">
                 开发热更新场景下复用连接缓存，避免重复创建连接导致告警。
               </Card>
             </Col>
