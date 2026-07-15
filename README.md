@@ -2,7 +2,7 @@
 
 Drawing Training Check-in System.
 
-Phase 0 foundation based on Next.js 15 App Router + TypeScript.
+Phase 0 + Phase 1 baseline based on Next.js 15 App Router + TypeScript.
 
 ## Tech Stack
 
@@ -31,6 +31,8 @@ cp .env.example .env.local
 - `MONGODB_URI`
 - `JWT_SECRET`
 - `JWT_EXPIRES_IN`
+- `AUTH_COOKIE_NAME`
+- `BOOTSTRAP_SUPER_KEY`
 
 4. Start development server
 
@@ -39,6 +41,22 @@ npm run dev
 ```
 
 Visit http://localhost:3000
+
+## Bootstrap Super Account
+
+Before using account management, initialize a first `super` account once:
+
+```bash
+curl -X POST http://localhost:3000/api/admin/bootstrap-super \
+	-H "Content-Type: application/json" \
+	-d '{
+		"bootstrapKey": "your-BOOTSTRAP_SUPER_KEY",
+		"username": "superadmin",
+		"password": "StrongPassword123"
+	}'
+```
+
+After bootstrapping, login at `/login` and manage child accounts in `/admin/accounts`.
 
 ## Commands
 
@@ -55,3 +73,12 @@ Visit http://localhost:3000
 - Global Ant Design provider and layout shell
 - Unified API error response helpers
 - Core directories prepared: app, api, models, lib, store, components
+
+## Phase 1 Auth and RBAC
+
+- Admin model with roles: `super`, `admin`, `teacher`
+- JWT login/logout/me APIs with HttpOnly cookie session
+- Route middleware guard + API-level secondary authorization
+- Role-based menu visibility and protected page layouts
+- Super-only account management APIs and UI
+- Permission matrix: `doc/permission-matrix-phase1.md`

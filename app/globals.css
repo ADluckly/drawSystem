@@ -53,9 +53,55 @@ body {
   box-shadow: 0 10px 24px rgba(2, 6, 23, 0.06);
 }
 
+.app-shell {
+  min-height: 100vh;
+}
+
+.app-shell .ant-layout-sider {
+  background: #0f172a;
+}
+
+.app-shell-logo {
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #dbeafe;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.app-shell-header {
+  background: rgba(255, 255, 255, 0.88) !important;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.app-shell-content {
+  padding: 1.25rem;
+}
+
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.login-card {
+  width: min(420px, 100%);
+}
+
 @media (max-width: 768px) {
   .page-content {
     width: calc(100% - 1.25rem);
     padding-top: 1.25rem;
+  }
+
+  .app-shell-content {
+    padding: 0.75rem;
   }
 }
