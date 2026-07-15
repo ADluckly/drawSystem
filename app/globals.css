@@ -1,0 +1,61 @@
+:root {
+  --bg-page: #f4f7fb;
+  --text-main: #1f2937;
+  --header-bg: #0f172a;
+  --card-bg: #ffffff;
+  --border-color: #e5e7eb;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+}
+
+body {
+  color: var(--text-main);
+  background:
+    radial-gradient(circle at top left, #dde9ff 0%, transparent 30%),
+    radial-gradient(circle at right bottom, #e8f5ff 0%, transparent 35%),
+    var(--bg-page);
+  font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+
+.page-layout {
+  min-height: 100vh;
+  background: transparent;
+}
+
+.page-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  background: linear-gradient(120deg, var(--header-bg), #1e293b) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.page-content {
+  width: min(1080px, 100% - 2rem);
+  margin: 0 auto;
+  padding: 2rem 0 3rem;
+}
+
+.ant-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 10px 24px rgba(2, 6, 23, 0.06);
+}
+
+@media (max-width: 768px) {
+  .page-content {
+    width: calc(100% - 1.25rem);
+    padding-top: 1.25rem;
+  }
+}
