@@ -2,6 +2,7 @@ import { NextRequest } from "next/server";
 
 import { errorResponse, successResponse } from "@/lib/api-response";
 import { requireApiSession } from "@/lib/auth/session";
+import { getSystemConfig } from "@/lib/business/system-config";
 import { buildStudentFilterQuery } from "@/lib/business/student-filters";
 import { connectMongoDB } from "@/lib/mongodb";
 import { ClassModel } from "@/models/class";
@@ -78,6 +79,8 @@ export async function POST(request: NextRequest) {
 
   await connectMongoDB();
 
+  const systemConfig = await getSystemConfig();
+
   if (body.classId) {
     const klass = await ClassModel.findById(body.classId).select("_id status").lean();
     if (!klass || klass.status !== "active") {
@@ -90,7 +93,7 @@ export async function POST(request: NextRequest) {
     mobile: body.mobile.trim(),
     gender: body.gender ?? "other",
     classId: body.classId ?? null,
-    warningThreshold: body.warningThreshold ?? 3,
+    warningThreshold: body.warningThreshold ?? systemConfig.defaultWarningThreshold,
     note: body.note?.trim() ?? "",
     status: "active",
     lessonTotal: 0,

@@ -77,6 +77,7 @@ export const config = {
     "/students/:path*",
     "/recharges/:path*",
     "/signs/:path*",
+    "/settings/:path*",
     "/admin/:path*",
   ],
 };

@@ -2,7 +2,7 @@
 
 Drawing Training Check-in System.
 
-Phase 0 + Phase 1 + Phase 2 MVP baseline based on Next.js 15 App Router + TypeScript.
+Phase 0 + Phase 1 + Phase 2 + Phase 3 baseline based on Next.js 15 App Router + TypeScript.
 
 ## Tech Stack
 
@@ -94,3 +94,26 @@ After bootstrapping, login at `/login` and manage child accounts in `/admin/acco
 - Same-day duplicate sign protection by business check + unique index
 - Lesson warning API and dashboard warning card
 - Key coverage: lesson ledger unit tests + recharge/sign integration tests
+
+## Phase 3 Enhancements
+
+- Batch sign API and page for class-level operation with partial success and failure detail list
+- Batch sign idempotency control using `x-idempotency-key` + `BatchSignJob` persistence
+- Dashboard stats API and visual cards for revenue, consumed lessons, new students, renewals, and warnings
+- Excel export APIs for recharges, signs, and students overview with shared filters
+- Config center page (`/settings`) for:
+	- Course category and course status maintenance
+	- Class-teacher binding and class status maintenance
+	- Global system settings (`defaultWarningThreshold`, export limits)
+- Global warning threshold change applies immediately to all students
+
+## New Phase 3 API Endpoints
+
+- `POST /api/signs/batch`: class batch sign with partial success result
+- `GET /api/dashboard/stats`: dashboard business metrics (`range=day|month`)
+- `GET /api/exports/recharges`: recharge export
+- `GET /api/exports/signs`: sign export
+- `GET /api/exports/students`: students lesson overview export
+- `GET/PATCH /api/settings/system`: system settings
+- `GET /api/teachers/options`: teacher options for class binding
+- `PATCH /api/courses/:id`, `PATCH /api/classes/:id`: config updates

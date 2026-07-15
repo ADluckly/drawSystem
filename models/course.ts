@@ -5,6 +5,7 @@ export const COURSE_STATUS = ["active", "inactive"] as const;
 const courseSchema = new Schema(
   {
     name: { type: String, required: true, trim: true, maxlength: 64 },
+    category: { type: String, required: true, trim: true, maxlength: 32, default: "默认分类" },
     lessonCount: { type: Number, required: true, min: 0 },
     giftLesson: { type: Number, required: true, min: 0, default: 0 },
     amount: { type: Number, required: true, min: 0 },
@@ -15,7 +16,7 @@ const courseSchema = new Schema(
   { timestamps: true, versionKey: false },
 );
 
-courseSchema.index({ status: 1, name: 1 }, { name: "idx_course_status_name" });
+courseSchema.index({ status: 1, category: 1, name: 1 }, { name: "idx_course_status_category_name" });
 
 export type CourseDocument = InferSchemaType<typeof courseSchema> & {
   _id: Types.ObjectId;

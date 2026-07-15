@@ -4,6 +4,7 @@ import { NextRequest } from "next/server";
 
 import { errorResponse, successResponse } from "@/lib/api-response";
 import { requireApiSession } from "@/lib/auth/session";
+import { buildRechargeFilter } from "@/lib/business/record-filters";
 import { applyRechargeLedger } from "@/lib/business/lesson-ledger";
 import { generateRechargeSerial } from "@/lib/business/recharge-serial";
 import {
@@ -69,19 +70,28 @@ export async function GET(request: NextRequest) {
 
   await connectMongoDB();
 
-  const studentId = request.nextUrl.searchParams.get("studentId");
-  const query = studentId ? { studentId } : {};
+  const query = await buildRechargeFilter({
+    studentId: request.nextUrl.searchParams.get("studentId"),
+    classId: request.nextUrl.searchParams.get("classId"),
+    paymentMethod: request.nextUrl.searchParams.get("paymentMethod"),
+    fromDate: request.nextUrl.searchParams.get("fromDate")
+      ? new Date(request.nextUrl.searchParams.get("fromDate") as string)
+      : undefined,
+    toDate: request.nextUrl.searchParams.get("toDate")
+      ? new Date(request.nextUrl.searchParams.get("toDate") as string)
+      : undefined,
+  });
 
   const items = await RechargeModel.find(query)
-    .populate("studentId", "name mobile")
+    .populate({ path: "studentId", select: "name mobile classId", populate: { path: "classId", select: "name" } })
     .sort({ createdAt: -1 })
-    .limit(100)
+    .limit(200)
     .lean();
 
   return successResponse({
     items: items.map((item) => {
       const studentRef = item.studentId as unknown as
-        | { _id: unknown; name: string; mobile: string }
+        | { _id: unknown; name: string; mobile: string; classId?: { name: string } | null }
         | undefined;
 
       return {
@@ -92,6 +102,7 @@ export async function GET(request: NextRequest) {
               id: String(studentRef._id),
               name: studentRef.name,
               mobile: studentRef.mobile,
+              className: studentRef.classId?.name ?? null,
             }
           : null,
         packageName: item.packageName,
@@ -99,6 +110,7 @@ export async function GET(request: NextRequest) {
         giftAdded: item.giftAdded,
         amount: item.amount,
         paymentMethod: item.paymentMethod,
+        note: item.note,
         createdAt: item.createdAt,
       };
     }),

@@ -7,6 +7,8 @@ describe("rbac-matrix", () => {
     expect(canAccessPath("/students", "teacher")).toBe(true);
     expect(canAccessPath("/recharges", "teacher")).toBe(false);
     expect(canAccessPath("/recharges", "admin")).toBe(true);
+    expect(canAccessPath("/settings", "admin")).toBe(true);
+    expect(canAccessPath("/settings", "teacher")).toBe(false);
     expect(canAccessPath("/admin/accounts", "admin")).toBe(false);
     expect(canAccessPath("/admin/accounts", "super")).toBe(true);
   });
@@ -18,5 +20,6 @@ describe("rbac-matrix", () => {
     expect(teacherMenu.some((item) => item.path === "/students")).toBe(true);
     expect(teacherMenu.some((item) => item.path === "/recharges")).toBe(false);
     expect(adminMenu.some((item) => item.path === "/recharges")).toBe(true);
+    expect(adminMenu.some((item) => item.path === "/settings")).toBe(true);
   });
 });

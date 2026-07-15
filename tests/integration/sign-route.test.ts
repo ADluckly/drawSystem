@@ -3,6 +3,8 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const requireApiSessionMock = vi.fn();
 const connectMongoDBMock = vi.fn();
+const supportsMongoTransactionsMock = vi.fn();
+const isTransactionUnsupportedErrorMock = vi.fn();
 const signFindOneMock = vi.fn();
 const signFindOneByIdempotencyMock = vi.fn();
 const signCreateMock = vi.fn();
@@ -16,6 +18,8 @@ vi.mock("@/lib/auth/session", () => ({
 
 vi.mock("@/lib/mongodb", () => ({
   connectMongoDB: connectMongoDBMock,
+  supportsMongoTransactions: supportsMongoTransactionsMock,
+  isTransactionUnsupportedError: isTransactionUnsupportedErrorMock,
 }));
 
 vi.mock("@/models/sign", () => ({
@@ -51,6 +55,8 @@ vi.mock("mongoose", () => ({
 describe("POST /api/signs", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    supportsMongoTransactionsMock.mockResolvedValue(true);
+    isTransactionUnsupportedErrorMock.mockReturnValue(false);
   });
 
   it("rejects duplicate sign for same student/day", async () => {

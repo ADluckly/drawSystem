@@ -3,6 +3,8 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const requireApiSessionMock = vi.fn();
 const connectMongoDBMock = vi.fn();
+const supportsMongoTransactionsMock = vi.fn();
+const isTransactionUnsupportedErrorMock = vi.fn();
 const rechargeFindOneMock = vi.fn();
 const rechargeCreateMock = vi.fn();
 const studentFindByIdMock = vi.fn();
@@ -16,6 +18,8 @@ vi.mock("@/lib/auth/session", () => ({
 
 vi.mock("@/lib/mongodb", () => ({
   connectMongoDB: connectMongoDBMock,
+  supportsMongoTransactions: supportsMongoTransactionsMock,
+  isTransactionUnsupportedError: isTransactionUnsupportedErrorMock,
 }));
 
 vi.mock("@/models/recharge", () => ({
@@ -57,6 +61,8 @@ vi.mock("mongoose", () => ({
 describe("POST /api/recharges", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    supportsMongoTransactionsMock.mockResolvedValue(true);
+    isTransactionUnsupportedErrorMock.mockReturnValue(false);
   });
 
   it("returns forbidden for teacher role", async () => {

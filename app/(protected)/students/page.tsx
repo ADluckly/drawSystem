@@ -69,7 +69,6 @@ interface StudentCreateValues {
   mobile: string;
   gender: "male" | "female" | "other";
   classId?: string;
-  warningThreshold: number;
   note?: string;
 }
 
@@ -81,6 +80,8 @@ export default function StudentsPage() {
   const [createLoading, setCreateLoading] = useState(false);
   const [keyword, setKeyword] = useState("");
   const [lessonStatus, setLessonStatus] = useState<"all" | "low" | "normal">("all");
+  const [classId, setClassId] = useState<string | undefined>(undefined);
+  const [classOptions, setClassOptions] = useState<Array<{ label: string; value: string }>>([]);
   const [detailOpen, setDetailOpen] = useState(false);
   const [detailLoading, setDetailLoading] = useState(false);
   const [detailData, setDetailData] = useState<StudentDetailResponse["data"] | null>(null);
@@ -92,6 +93,7 @@ export default function StudentsPage() {
       const params = new URLSearchParams({ status: "active" });
       if (keyword.trim()) params.set("keyword", keyword.trim());
       if (lessonStatus !== "all") params.set("lessonStatus", lessonStatus);
+      if (classId) params.set("classId", classId);
 
       const response = await fetch(`/api/students?${params.toString()}`, { credentials: "include" });
       const result = (await response.json()) as { success: boolean; data?: { items: StudentItem[] } };
@@ -107,6 +109,28 @@ export default function StudentsPage() {
     } finally {
       setLoading(false);
     }
+  }
+
+  async function loadClasses() {
+    const response = await fetch("/api/classes", { credentials: "include" });
+    const result = (await response.json()) as {
+      success: boolean;
+      data?: { items: Array<{ id: string; name: string; code: string }> };
+    };
+
+    if (!response.ok || !result.success || !result.data) {
+      return;
+    }
+
+    setClassOptions(result.data.items.map((item) => ({ label: `${item.name} (${item.code})`, value: item.id })));
+  }
+
+  function exportStudents() {
+    const params = new URLSearchParams({ status: "active" });
+    if (keyword.trim()) params.set("keyword", keyword.trim());
+    if (lessonStatus !== "all") params.set("lessonStatus", lessonStatus);
+    if (classId) params.set("classId", classId);
+    window.open(`/api/exports/students?${params.toString()}`, "_blank", "noopener,noreferrer");
   }
 
   async function loadDetail(studentId: string) {
@@ -131,8 +155,9 @@ export default function StudentsPage() {
 
   useEffect(() => {
     void loadStudents();
+    void loadClasses();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [lessonStatus]);
+  }, [lessonStatus, classId]);
 
   async function createStudent(values: StudentCreateValues) {
     setCreateLoading(true);
@@ -223,6 +248,15 @@ export default function StudentsPage() {
                 { value: "normal", label: "正常课时" },
               ]}
             />
+            <Select
+              allowClear
+              value={classId}
+              style={{ width: 220 }}
+              placeholder="按班级筛选"
+              options={classOptions}
+              onChange={(value) => setClassId(value)}
+            />
+            <Button onClick={exportStudents}>导出课时总览</Button>
             <Button type="primary" onClick={() => setCreateOpen(true)}>
               新增学员
             </Button>
@@ -244,7 +278,7 @@ export default function StudentsPage() {
         <Form<StudentCreateValues>
           form={form}
           layout="vertical"
-          initialValues={{ gender: "other", warningThreshold: 3 }}
+          initialValues={{ gender: "other" }}
           onFinish={(values) => void createStudent(values)}
         >
           <Row gutter={12}>
@@ -276,8 +310,8 @@ export default function StudentsPage() {
               </Form.Item>
             </Col>
             <Col span={12}>
-              <Form.Item label="预警阈值" name="warningThreshold">
-                <Input type="number" min={1} />
+              <Form.Item label="班级" name="classId">
+                <Select allowClear options={classOptions} placeholder="可选" />
               </Form.Item>
             </Col>
           </Row>
